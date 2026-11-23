@@ -1,18 +1,22 @@
+import csv
 import requests
 from datetime import datetime, timedelta, timezone
+from pathlib import Path
 
-# Candidate board tokens (the script will tell us which ones exist)
-BOARDS = ["hackerrank", "databricks", "stripe", "rubrik", "airbnb",
-          "postman", "phonepe", "groww", "meesho", "browserstack"]
 DAYS = 3
 INDIA_WORDS = ["bangalore", "bengaluru", "india"]
 ROLE_WORDS = ["business analyst", "product analyst", "product operations",
               "business operations", "operations analyst", "product manager",
               "operations"]
+CONFIG_FILE = Path(__file__).parent.parent / "config"/"companies.csv"
+with open (CONFIG_FILE, newline="") as f:
+    companies = list(csv.DictReader(f))
 
+boards = [c["token"] for c in companies if c["source"]=="greenhouse"]
+print(f"Loaded {len(boards)} Greenhouse companies from {CONFIG_FILE.name}")
 cutoff = datetime.now(timezone.utc) - timedelta(days=DAYS)
 
-for board in BOARDS:
+for board in boards:
     url = f"https://boards-api.greenhouse.io/v1/boards/{board}/jobs"
     resp = requests.get(url, timeout=30)
 
