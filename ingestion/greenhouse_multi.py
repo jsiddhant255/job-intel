@@ -6,6 +6,9 @@ BOARDS = ["hackerrank", "databricks", "stripe", "rubrik", "airbnb",
           "postman", "phonepe", "groww", "meesho", "browserstack"]
 DAYS = 3
 INDIA_WORDS = ["bangalore", "bengaluru", "india"]
+ROLE_WORDS = ["business analyst", "product analyst", "product operations",
+              "business operations", "operations analyst", "product manager",
+              "operations"]
 
 cutoff = datetime.now(timezone.utc) - timedelta(days=DAYS)
 
@@ -24,9 +27,8 @@ for board in BOARDS:
             continue
         posted = datetime.fromisoformat(job["first_published"])
         location = job["location"]["name"]
-        if posted >= cutoff and any(w in location.lower() for w in INDIA_WORDS):
+        if posted >= cutoff and any(w in location.lower() for w in INDIA_WORDS) and any(w in job["title"].lower() for w in ROLE_WORDS):
             matches.append((posted.date(), job["title"].strip(), location))
-
-    print(f"OK         {board}: {len(jobs)} jobs, {len(matches)} fresh in India")
+    print(f"OK         {board}: {len(jobs)} jobs, {len(matches)} matching roles")
     for m in matches:
         print(f"           -> {m[0]} | {m[1]} | {m[2]}")
