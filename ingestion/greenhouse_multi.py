@@ -5,9 +5,11 @@ from pathlib import Path
 
 DAYS = 3
 INDIA_WORDS = ["bangalore", "bengaluru", "india"]
+# Target roles. Plain "operations" included on purpose for wider Ops coverage (see JI-6)
 ROLE_WORDS = ["business analyst", "product analyst", "product operations",
               "business operations", "operations analyst", "product manager",
               "operations"]
+# Company list lives in config/companies.csv so companies can be added without code changes
 CONFIG_FILE = Path(__file__).parent.parent / "config"/"companies.csv"
 with open (CONFIG_FILE, newline="") as f:
     companies = list(csv.DictReader(f))
